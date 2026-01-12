@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スキンケア比較ラボ</title>
+    
+    <!-- Fonts: Noto Sans JP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        lab: {
+                            // ライトモード用
+                            bg: '#F5F7FA',
+                            text: '#1E293B',
+                            sub: '#64748B',
+                            card: '#FFFFFF',
+                            border: '#E2E8F0',
+                            
+                            // ダークモード用 (Gray/Zinc系 - 無機質グレー)
+                            darkBg: '#18181B',      // Zinc-900
+                            darkText: '#F4F4F5',    // Zinc-100
+                            darkSub: '#A1A1AA',     // Zinc-400
+                            darkCard: '#27272A',    // Zinc-800
+                            darkBorder: '#3F3F46',  // Zinc-700
+                            
+                            // アクセント（共通）
+                            accent: '#C5A059',
+                            accentDark: '#A68545',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    },
+                    letterSpacing: {
+                        widest: '.15em',
+                    },
+                    // アニメーション用トランジション設定
+                    transitionDuration: {
+                        '400': '400ms',
+                        '450': '450ms',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base styles */
+        body {
+            transition: background-color 0.5s ease, color 0.5s ease;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Link Card Transitions */
+        .link-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* Light Mode Hover */
+        .link-card:hover {
+            border-color: #C5A059;
+            background-color: #FFFCF7;
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.4), 0 12px 24px -6px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* Dark Mode Hover */
+        .dark .link-card:hover {
+            background-color: #27272A;
+            border-color: #C5A059;
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.25), 0 10px 20px -5px rgba(0, 0, 0, 0.6);
+            transform: translateY(-3px);
+        }
+
+        /* アニメーション初期状態用クラス */
+        .fade-init {
+            opacity: 0;
+            /* will-changeはパフォーマンス最適化のため */
+            will-change: opacity, transform;
+        }
+        
+        .fade-init-move {
+            opacity: 0;
+            transform: translateY(2px); /* ほんの少しだけ下に */
+            will-change: opacity, transform;
+        }
+
+        /* アニメーション完了状態 */
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-lab-bg text-lab-text dark:bg-lab-darkBg dark:text-lab-darkText transition-colors duration-500">
+
+    <!-- ダークモード切り替えボタン -->
+    <div class="absolute top-6 right-6 z-50">
+        <button id="theme-toggle" class="p-2 rounded-full bg-white/50 dark:bg-zinc-800/50 backdrop-blur-sm border border-gray-200 dark:border-zinc-700 text-gray-500 dark:text-gray-400 hover:text-lab-accent dark:hover:text-lab-accent transition-all duration-300 shadow-sm">
+            <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+            <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+        </button>
+    </div>
+
+    <!-- ファーストビュー -->
+    <header class="w-full max-w-2xl mx-auto px-6 pt-24 pb-16 text-center">
+        <!-- 
+            [Animation Target 1: Title]
+            設定: opacityのみ, duration-450, ease-out
+            理由: 「信頼の入口」。演出感を出さない。
+        -->
+        <div id="anim-title" class="fade-init inline-block relative py-6 mb-16 w-full max-w-sm border-t border-gray-300 dark:border-zinc-700 border-b-2 border-lab-accent transition-opacity duration-450 ease-out">
+            <h1 class="text-2xl md:text-3xl font-medium tracking-widest">
+                スキンケア比較ラボ
+            </h1>
+        </div>
+
+        <!-- 本文 -->
+        <div class="font-light text-base md:text-lg space-y-8 leading-loose tracking-wide">
+            <p>
+                美容が得意な人ではありません。
+            </p>
+            <p>
+                数多くの商品を見ても、<br>
+                正直、違いがよく分からない側の人間です。
+            </p>
+            <p>
+                だからこそ、<br>
+                初心者目線でスキンケアを比較し、<br>
+                分かりやすく整理しています。
+            </p>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-2xl mx-auto px-6">
+
+        <!-- セクション：なぜこのサイトを作ったのか？ -->
+        <section class="mb-24 mt-12">
+            <div class="space-y-6 font-light">
+                <p>
+                    スキンケアを選ぼうとすると、<br>
+                    種類が多すぎて、正直よく分かりません。
+                </p>
+                <ul class="pl-4 space-y-2 text-lab-sub dark:text-lab-darkSub">
+                    <li>• 何が違うのか</li>
+                    <li>• どれが自分向けなのか</li>
+                    <li>• 価格差に意味があるのか</li>
+                </ul>
+                <p>
+                    分からないまま選ぶのが嫌で、<br>
+                    自分なりに調べ始めたのがきっかけです。
+                </p>
+            </div>
+        </section>
+
+        <!-- セクション：比較の基準 -->
+        <section class="mb-24">
+            <!-- 
+                [Animation Target 2: Criteria]
+                設定: opacity + translateY(2px), duration-400, ease-out
+                理由: 「なるほどゾーン」。唯一の動きで理解スイッチを入れる。
+            -->
+            <div id="anim-criteria" class="fade-init-move flex items-center gap-4 mb-10 transition-all duration-400 ease-out">
+                <div class="h-px bg-gray-300 dark:bg-zinc-700 flex-grow"></div>
+                <h2 class="text-lg tracking-widest font-normal whitespace-nowrap">比較の基準</h2>
+                <div class="h-px bg-gray-300 dark:bg-zinc-700 flex-grow"></div>
+            </div>
+
+            <p class="mb-10 text-center font-light">
+                スキンケアを比較するときは、<br>
+                主に次の3つを基準にしています。
+            </p>
+
+            <div class="space-y-10">
+                <!-- 成分 -->
+                <div class="border-l-[3px] border-lab-accent pl-5 py-1">
+                    <h3 class="text-lg font-bold mb-2 tracking-wide">成分</h3>
+                    <p class="text-lab-sub dark:text-lab-darkSub font-light text-sm md:text-base leading-relaxed">
+                        刺激になりやすいものが<br>
+                        入っていないかどうか。
+                    </p>
+                </div>
+
+                <!-- 口コミ -->
+                <div class="border-l-[3px] border-lab-accent pl-5 py-1">
+                    <h3 class="text-lg font-bold mb-2 tracking-wide">口コミ</h3>
+                    <p class="text-lab-sub dark:text-lab-darkSub font-light text-sm md:text-base leading-relaxed">
+                        実際に使った人の声は<br>
+                        どう評価されているか。
+                    </p>
+                </div>
+
+                <!-- 価格 -->
+                <div class="border-l-[3px] border-lab-accent pl-5 py-1">
+                    <h3 class="text-lg font-bold mb-2 tracking-wide">価格</h3>
+                    <p class="text-lab-sub dark:text-lab-darkSub font-light text-sm md:text-base leading-relaxed">
+                        無理なく<br>
+                        続けられる価格かどうか。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 補足テキスト（薄く） -->
+            <div class="mt-12 text-center">
+                <p class="text-xs text-gray-400 dark:text-zinc-500 font-light tracking-wide">
+                    専門的な評価ではなく、<br>
+                    「初心者が判断しやすいか」を重視しています。
+                </p>
+            </div>
+        </section>
+
+        <!-- セクション：活動場所 -->
+        <section class="mb-24">
+            <!-- 
+                [Animation Target 3: Activity]
+                設定: opacityのみ, duration-400, delay-75, ease-out
+                理由: 行動導線前の「区切り」。少し遅らせて静かに整える。
+            -->
+            <div id="anim-activity" class="fade-init flex items-center gap-4 mb-10 transition-opacity duration-400 delay-75 ease-out">
+                <div class="h-px bg-gray-300 dark:bg-zinc-700 flex-grow"></div>
+                <h2 class="text-lg tracking-widest font-normal whitespace-nowrap">活動場所</h2>
+                <div class="h-px bg-gray-300 dark:bg-zinc-700 flex-grow"></div>
+            </div>
+
+            <p class="mb-10 text-center font-light">
+                比較した内容は、<br>
+                主に以下でまとめています。
+            </p>
+
+            <div class="space-y-6">
+                <!-- 楽天ROOM -->
+                <a href="https://room.rakuten.co.jp/room_p1p1p1p1p1/items" target="_blank" rel="noopener noreferrer" class="link-card block bg-white dark:bg-lab-darkCard border border-gray-200 dark:border-lab-darkBorder p-6 md:p-8 no-underline group relative rounded-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="block text-xs text-lab-accent tracking-widest mb-1 group-hover:text-lab-accentDark transition-colors">RECOMMEND</span>
+                            <h3 class="text-lg font-medium mb-2">楽天ROOM</h3>
+                            <p class="text-sm text-lab-sub dark:text-lab-darkSub font-light group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
+                                商品をジャンル別に整理しています。
+                            </p>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-6 h-6 text-gray-400 dark:text-zinc-500 group-hover:text-lab-accent group-hover:translate-x-1 transition-all duration-300"></i>
+                    </div>
+                </a>
+
+                <!-- Threads -->
+                <a href="https://www.threads.com/@skincare_hikaku_labo?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener noreferrer" class="link-card block bg-white dark:bg-lab-darkCard border border-gray-200 dark:border-lab-darkBorder p-6 md:p-8 no-underline group relative rounded-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="block text-xs text-lab-accent tracking-widest mb-1 group-hover:text-lab-accentDark transition-colors">THOUGHTS</span>
+                            <h3 class="text-lg font-medium mb-2">Threads</h3>
+                            <p class="text-sm text-lab-sub dark:text-lab-darkSub font-light group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
+                                考え方や比較の記録を投稿しています。
+                            </p>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-6 h-6 text-gray-400 dark:text-zinc-500 group-hover:text-lab-accent group-hover:translate-x-1 transition-all duration-300"></i>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- フッター -->
+    <footer class="mt-auto py-12 px-6 border-t border-gray-200 dark:border-zinc-800">
+        <div class="max-w-2xl mx-auto text-center space-y-4">
+            <p class="text-[10px] md:text-xs text-gray-400 dark:text-zinc-600 font-light leading-relaxed">
+                ※ このサイトおよび投稿内容は、<br class="md:hidden">
+                個人が調べた情報をもとにしたものです。
+            </p>
+            <p class="text-[10px] md:text-xs text-gray-400 dark:text-zinc-600 font-light leading-relaxed">
+                ※ 効果や感じ方には個人差があります。<br class="md:hidden">
+                購入の際は、ご自身の判断でお願いします。
+            </p>
+            <div class="pt-8">
+                <small class="text-[10px] text-gray-300 dark:text-zinc-700 tracking-widest">© SKINCARE HIKAKU LAB.</small>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Dark Mode Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        });
+
+        // ---------------------------------------------------------
+        // スクロールアニメーション (Intersection Observer)
+        // ---------------------------------------------------------
+        
+        // 監視対象のIDリスト
+        const targets = ['anim-title', 'anim-criteria', 'anim-activity'];
+
+        const observerOptions = {
+            root: null, // ビューポート
+            rootMargin: '0px',
+            threshold: 0.1 // 10%見えたら発火（早めにスッと出す）
+        };
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // 表示クラスを付与
+                    entry.target.classList.add('fade-in');
+                    
+                    // 監視を解除（1回のみ発火）
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        targets.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) observer.observe(el);
+        });
+
+    </script>
+</body>
+</html>
+
+
